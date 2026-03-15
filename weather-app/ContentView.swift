@@ -12,21 +12,24 @@ struct User : Identifiable {
     
     var name : String
     var desc : String
+    var image : ImageResource = .narendraModi
 }
 
 struct ContentView: View {
     
+    @State private var searchedQuery: String = ""
+    
     var users: [User] = [
         User(name: "Narendra Modi", desc: "Runs on chai, speeches, and 56-inch confidence."),
-        User(name: "Joe Biden", desc: "Ice cream enthusiast navigating global politics."),
-        User(name: "Emmanuel Macron", desc: "Balancing baguettes, diplomacy, and bold reforms."),
-        User(name: "Rishi Sunak", desc: "Crunching budgets faster than a fintech startup."),
-        User(name: "Justin Trudeau", desc: "Politics with a side of socks and selfies."),
-        User(name: "Giorgia Meloni", desc: "Steering Italy with espresso-level intensity."),
-        User(name: "Olaf Scholz", desc: "Quietly calculating Europe’s next move."),
-        User(name: "Fumio Kishida", desc: "Diplomacy polished like a perfectly brewed matcha."),
-        User(name: "Anthony Albanese", desc: "G’day diplomacy with a practical Aussie twist."),
-        User(name: "Pedro Sánchez", desc: "Juggling coalitions like a political flamenco.")
+        User(name: "Joe Biden", desc: "Ice cream enthusiast navigating global politics.", image: .joeBiden),
+        User(name: "Emmanuel Macron", desc: "Balancing baguettes, diplomacy, and bold reforms.", image: .emmanuelMacron),
+        User(name: "Rishi Sunak", desc: "Crunching budgets faster than a fintech startup.", image: .rishiSunak),
+        User(name: "Justin Trudeau", desc: "Politics with a side of socks and selfies.", image: .justinTrudeo),
+        User(name: "Giorgia Meloni", desc: "Steering Italy with espresso-level intensity.", image: .giorgiaMeloni),
+        User(name: "Olaf Scholz", desc: "Quietly calculating Europe’s next move.", image: .olafScholz),
+        User(name: "Fumio Kishida", desc: "Diplomacy polished like a perfectly brewed matcha.", image: .fumioKishida),
+        User(name: "Anthony Albanese", desc: "G’day diplomacy with a practical Aussie twist.", image: .anothonyAlbanese),
+        User(name: "Pedro Sánchez", desc: "Juggling coalitions like a political flamenco.", image: .pedroSanchez)
     ]
     
     var body: some View {
@@ -45,10 +48,11 @@ struct ContentView: View {
                         // Search bar
                         HStack {
                             Image(systemName: "magnifyingglass")
-                                .foregroundStyle(.black)
+                                .foregroundStyle(.gray)
 
-                            Text("Ask Meta AI or search")
-                                .foregroundStyle(.black)
+                            TextField("Ask Meta AI or search", text: $searchedQuery) {
+                                
+                            }
 
                             Spacer()
                         }
@@ -62,15 +66,7 @@ struct ContentView: View {
 
                         // Users
                         ForEach(users) { user in
-                            VStack(alignment: .leading) {
-                                Text(user.name)
-                                    .foregroundStyle(Color.white)
-                                Text(user.desc)
-                                    .foregroundStyle(.gray)
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal)
-                            .padding(.vertical, 8)
+                            ChatBox(userName: user.name, userDesc: user.desc, imageName: user.image).padding(.horizontal, 20)
                         }
                     }
                 }
