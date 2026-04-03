@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct User : Identifiable {
+struct User : Identifiable, Hashable {
     var id: UUID = UUID()
     
     var name : String
@@ -15,7 +15,7 @@ struct User : Identifiable {
     var image : ImageResource = .narendraModi
 }
 
-struct ContentView: View {
+struct ChatList: View {
     
     @State private var searchedQuery: String = ""
     
@@ -60,21 +60,26 @@ struct ContentView: View {
                         .frame(height: 50)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(Color(uiColor: .gray))
+                                .fill(Color(hex: "#363636"))
                         )
                         .padding(.horizontal)
 
                         // Users
                         ForEach(users) { user in
-                            ChatBox(userName: user.name, userDesc: user.desc, imageName: user.image).padding(.horizontal, 20)
+                            NavigationLink(value: user) {
+                                ChatBox(userName: user.name, userDesc: user.desc, imageName: user.image, chatType: .message).padding(.horizontal, 20)
+                            }
                         }
+                        
                     }
+                }.navigationDestination(for: User.self) { user in
+                    Chat(user: user)
                 }
                 
             }
             // Forces the entire stack into dark mode style
             
-            .navigationTitle("WhatsApp")
+            .navigationTitle("Chats")
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
@@ -84,17 +89,18 @@ struct ContentView: View {
                         }
                     }
                     
+                    
                     ToolbarItemGroup(placement: .topBarTrailing) {
                         Button {
                             print("Add tapped")
                         } label: {
-                            Image(systemName: "plus")
+                            Image(systemName: "camera")
                         }
                         
                         Button {
                             print("minus tapped")
                         } label: {
-                            Image(systemName: "minus")
+                            Image(systemName: "qrcode")
                         }
                     }
                     
@@ -112,5 +118,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ChatList()
 }
