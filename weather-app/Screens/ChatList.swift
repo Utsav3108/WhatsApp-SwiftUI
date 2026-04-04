@@ -15,9 +15,92 @@ struct User : Identifiable, Hashable {
     var image : ImageResource = .narendraModi
 }
 
+struct Message: Identifiable, Hashable {
+    var id: UUID = UUID()
+    var isUser : Bool = false
+    var senderId: UUID
+    var text: String
+    var timestamp: String
+}
+
 struct ChatList: View {
     
     @State private var searchedQuery: String = ""
+    
+    let messages: [Message] = [
+        Message(
+            isUser: true,
+            senderId: UUID(),
+            text: "Modi ji, petrol ₹120 cross ho gaya 😭 Yeh war chal raha hai ya wallet attack?",
+            timestamp: "22:10"
+        ),
+        Message(
+            isUser: false,
+            senderId: UUID(),
+            text: "Mitron, situation thodi 'worrisome' hai... par control mein hai 😌",
+            timestamp: "22:11"
+        ),
+        Message(
+            isUser: true,
+            senderId: UUID(),
+            text: "Control mein matlab? Pump pe toh mera BP 140 ho gaya 💀",
+            timestamp: "22:12"
+        ),
+        Message(
+            isUser: false,
+            senderId: UUID(),
+            text: "Global oil supply thodi disturb hui hai... Strait of Hormuz ka chakkar hai",
+            timestamp: "22:13"
+        ),
+        Message(
+            isUser: true,
+            senderId: UUID(),
+            text: "Mujhe toh sirf mera scooter disturb lag raha hai, full tank karane se pehle hi budget khatam 😭",
+            timestamp: "22:14"
+        ),
+        Message(
+            isUser: false,
+            senderId: UUID(),
+            text: "Aap electric vehicle consider kijiye 🔋",
+            timestamp: "22:15"
+        ),
+        Message(
+            isUser: true,
+            senderId: UUID(),
+            text: "Sir charging station dhoondhne mein hi aadha din nikal jayega 😂",
+            timestamp: "22:16"
+        ),
+        Message(
+            isUser: false,
+            senderId: UUID(),
+            text: "Desh badal raha hai... thoda adjust kariye 😄",
+            timestamp: "22:17"
+        ),
+        Message(
+            isUser: true,
+            senderId: UUID(),
+            text: "Sir desh badal raha hai, par mera bank balance reverse gear mein ja raha hai 🚶‍♂️",
+            timestamp: "22:18"
+        ),
+        Message(
+            isUser: false,
+            senderId: UUID(),
+            text: "Aatmanirbhar baniye… cycle chalaiye 🚲",
+            timestamp: "22:19"
+        ),
+        Message(
+            isUser: true,
+            senderId: UUID(),
+            text: "Next message: 'Sir office 12km hai' 😐",
+            timestamp: "22:20"
+        ),
+        Message(
+            isUser: true,
+            senderId: UUID(),
+            text: "Hey .. sir? ",
+            timestamp: "22:20"
+        )
+    ]
     
     var users: [User] = [
         User(name: "Narendra Modi", desc: "Runs on chai, speeches, and 56-inch confidence."),
@@ -73,7 +156,7 @@ struct ChatList: View {
                         
                     }
                 }.navigationDestination(for: User.self) { user in
-                    Chat(user: user)
+                    Chat(user: user, messages: messages)
                 }
                 
             }
