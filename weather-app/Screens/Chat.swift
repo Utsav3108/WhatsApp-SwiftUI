@@ -22,21 +22,41 @@ struct Chat : View {
     var body : some View {
         
         VStack(spacing: 0) {           
-            ScrollView(showsIndicators: false) {
-                LazyVStack {
-                    ForEach(messages) { message in
-                        MessageView(
-                            message: message.text,
-                            time: message.timestamp,
-                            isRead: true,
-                            isUser: message.isUser,
-                            messageBgColor: message.isUser ? Color.green : Color(hex: "#363636")
-                        )
-                        .padding(message.isUser ? .leading : .trailing, 60)
+            ScrollViewReader { proxy in
+                ScrollView(showsIndicators: false) {
+                    LazyVStack {
+                        ForEach(messages) { message in
+                            MessageView(
+                                message: message.text,
+                                time: message.timestamp,
+                                isRead: true,
+                                isUser: message.isUser,
+                                messageBgColor: message.isUser ? Color.green : Color(hex: "#363636")
+                            )
+                            .padding(message.isUser ? .leading : .trailing, 60)
+                        }
+                    }
+                }
+                .scrollDismissesKeyboard(.interactively)
+                .onAppear {
+                                // Scroll to bottom on open
+                                if let last = messages.last {
+                                    proxy.scrollTo(last.id, anchor: .bottom)
+                                }
+                            }
+                .onChange(of: messages.count) { _, _ in
+                    // Scroll to bottom when new message arrives
+                    if let last = messages.last {
+                        withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
+                    }
+                }
+                .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+                    // Scroll to bottom when keyboard opens
+                    if let last = messages.last {
+                        withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
                     }
                 }
             }
-            .scrollDismissesKeyboard(.interactively)
 
             // Input bar sits naturally at the bottom
             HStack {
