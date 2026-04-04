@@ -11,13 +11,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6FE956842F647B3500B5686F /* weather-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "weather-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FE956842F647B3500B5686F /* WhatsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhatsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6FE956862F647B3500B5686F /* weather-app */ = {
+		6FE956862F647B3500B5686F /* Whatsapp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "weather-app";
+			path = Whatsapp;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -37,7 +37,7 @@
 		6FE9567B2F647B3500B5686F = {
 			isa = PBXGroup;
 			children = (
-				6FE956862F647B3500B5686F /* weather-app */,
+				6FE956862F647B3500B5686F /* Whatsapp */,
 				6FE956852F647B3500B5686F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -45,7 +45,7 @@
 		6FE956852F647B3500B5686F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6FE956842F647B3500B5686F /* weather-app.app */,
+				6FE956842F647B3500B5686F /* WhatsApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -53,9 +53,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6FE956832F647B3500B5686F /* weather-app */ = {
+		6FE956832F647B3500B5686F /* WhatsApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6FE956942F647B3600B5686F /* Build configuration list for PBXNativeTarget "weather-app" */;
+			buildConfigurationList = 6FE956942F647B3600B5686F /* Build configuration list for PBXNativeTarget "WhatsApp" */;
 			buildPhases = (
 				6FE956802F647B3500B5686F /* Sources */,
 				6FE956812F647B3500B5686F /* Frameworks */,
@@ -66,14 +66,14 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				6FE956862F647B3500B5686F /* weather-app */,
+				6FE956862F647B3500B5686F /* Whatsapp */,
 			);
-			name = "weather-app";
+			name = WhatsApp;
 			packageProductDependencies = (
 				6FE956B62F647C2F00B5686F /* SwiftyJSON */,
 			);
 			productName = "weather-app";
-			productReference = 6FE956842F647B3500B5686F /* weather-app.app */;
+			productReference = 6FE956842F647B3500B5686F /* WhatsApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -91,7 +91,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6FE9567F2F647B3500B5686F /* Build configuration list for PBXProject "weather-app" */;
+			buildConfigurationList = 6FE9567F2F647B3500B5686F /* Build configuration list for PBXProject "WhatsApp" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -108,7 +108,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6FE956832F647B3500B5686F /* weather-app */,
+				6FE956832F647B3500B5686F /* WhatsApp */,
 			);
 		};
 /* End PBXProject section */
@@ -272,7 +272,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.utsavpandya.weather-app";
+				PRODUCT_BUNDLE_IDENTIFIER = com.utsavpandya.whatsapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -303,7 +303,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.utsavpandya.weather-app";
+				PRODUCT_BUNDLE_IDENTIFIER = com.utsavpandya.whatsapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -318,7 +318,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6FE9567F2F647B3500B5686F /* Build configuration list for PBXProject "weather-app" */ = {
+		6FE9567F2F647B3500B5686F /* Build configuration list for PBXProject "WhatsApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6FE956922F647B3600B5686F /* Debug */,
@@ -327,7 +327,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6FE956942F647B3600B5686F /* Build configuration list for PBXNativeTarget "weather-app" */ = {
+		6FE956942F647B3600B5686F /* Build configuration list for PBXNativeTarget "WhatsApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6FE956952F647B3600B5686F /* Debug */,
