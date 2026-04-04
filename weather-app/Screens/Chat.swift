@@ -110,7 +110,7 @@ struct Chat : View {
 }
 
 #Preview {
-    Chat(user: User(name: "Narendra Modi", desc: "Online"), messages: [
+    Chat(user: User(id: 1, name: "Narendra Modi", desc: "Online"), messages: [
         Message(
             isUser: true,
             senderId: UUID(),
