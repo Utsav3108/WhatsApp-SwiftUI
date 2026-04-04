@@ -21,36 +21,42 @@ struct Chat : View {
     
     var body : some View {
         
-        ZStack {
-            
+        VStack(spacing: 0) {           
+            ScrollView(showsIndicators: false) {
+                LazyVStack {
+                    ForEach(messages) { message in
+                        MessageView(
+                            message: message.text,
+                            time: message.timestamp,
+                            isRead: true,
+                            isUser: message.isUser,
+                            messageBgColor: message.isUser ? Color.green : Color(hex: "#363636")
+                        )
+                        .padding(message.isUser ? .leading : .trailing, 60)
+                    }
+                }
+            }
+            .scrollDismissesKeyboard(.interactively)
+
+            // Input bar sits naturally at the bottom
+            HStack {
+                TextField("Type a message", text: $message)
+                    .padding(10)
+                    .background(Color.white.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+            }
+            .padding()
+            .background(.ultraThinMaterial)
+        }
+        .background {
+            // Background goes here, outside layout flow
             Image(.whatsAppBg)
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
                 .opacity(0.3)
-            
-            VStack (spacing:0) {
-                
-                
-                ScrollView {
-                    LazyVStack {
-                        ForEach(messages) { message in
-                            
-                            
-                            
-                            MessageView(message: message.text, time: message.timestamp, isRead: true, isUser: message.isUser, messageBgColor: message.isUser ? Color.green : Color.gray).padding( message.isUser ? .leading : .trailing, 60)
-                        }
-                            
-                    }
-                }
-                
-                TextField("Type a message", text: $message)
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 20).stroke(Color.gray))
-                    .padding()
-            }
-            
-        }.toolbar {
+        }
+        .toolbar {
             // Center: Profile Image + Name
             ToolbarItem(placement: .principal) {
                 
