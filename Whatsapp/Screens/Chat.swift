@@ -52,20 +52,63 @@ struct Chat : View {
                 }
                 .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
                     // Scroll to bottom when keyboard opens
-                    if let last = messages.last {
-                        withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
+                    DispatchQueue.main.async {
+                        if let last = messages.last {
+                            withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
+                        }
                     }
                 }
             }
 
-            // Input bar sits naturally at the bottom
-            HStack {
-                TextField("Type a message", text: $message)
-                    .padding(10)
-                    .background(Color.white.opacity(0.1))
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
+            HStack(spacing: 8) {
+                // Text field bubble
+                HStack(spacing: 10) {
+                    // Emoji button
+                    Button {
+                        // emoji action
+                    } label: {
+                        Image(systemName: "face.smiling")
+                            .font(.system(size: 22))
+                            .foregroundStyle(.secondary)
+                    }
+
+                    TextField("Message", text: $message, axis: .vertical)
+                        
+                        .font(.system(size: 15))
+
+                    // Attachment button
+                    Button {
+                        // attachment action
+                    } label: {
+                        Image(systemName: "paperclip")
+                            .font(.system(size: 20))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(Color(.systemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 24))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .stroke(Color(.systemGray4), lineWidth: 0.5)
+                )
+
+                // Send / mic button
+                Button {
+                    // send action
+                } label: {
+                    Image(systemName: message.isEmpty ? "mic.fill" : "arrow.up")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: 44, height: 44)
+                        .background(Color(red: 0.145, green: 0.827, blue: 0.4)) // WhatsApp green
+                        .clipShape(Circle())
+                }
+                .animation(.easeInOut(duration: 0.15), value: message.isEmpty)
             }
-            .padding()
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
             .background(.ultraThinMaterial)
         }
         .background {
