@@ -37,7 +37,7 @@ struct Chat : View {
                         }
                     }
                 }
-                .scrollDismissesKeyboard(.interactively)
+                .scrollDismissesKeyboard(.immediately)
                 .onAppear {
                                 // Scroll to bottom on open
                                 if let last = messages.last {
