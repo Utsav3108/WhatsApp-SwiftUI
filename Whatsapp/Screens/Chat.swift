@@ -10,7 +10,7 @@ import SwiftUI
 struct Chat : View {
     
     let user : User
-    let messages : [Message]
+    @State var messages : [Message]
     
     init(user: User, messages : [Message]) {
         self.user = user
@@ -75,6 +75,10 @@ struct Chat : View {
                     TextField("Message", text: $message, axis: .vertical)
                         
                         .font(.system(size: 15))
+                        .onChange(of: message, { _, newValue in
+                            print("Here's the new value: \(newValue)")
+                        })
+                        
 
                     // Attachment button
                     Button {
@@ -97,6 +101,12 @@ struct Chat : View {
                 // Send / mic button
                 Button {
                     // send action
+                    
+                    let newMessage = Message(isUser: true, senderId: UUID(), text: message, timestamp: "33:44")
+                    messages.append(newMessage)
+                    message.removeAll()
+                    
+                    
                 } label: {
                     Image(systemName: message.isEmpty ? "mic.fill" : "arrow.up")
                         .font(.system(size: 18, weight: .semibold))
