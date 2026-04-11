@@ -9,16 +9,21 @@ import SwiftUI
 
 struct Chat : View {
     
+    // MARK: - Global Variable
     let user : User
+    let network = Network()
+    // MARK: - State
     @State var messages : [Message]
+    @State var message: String = ""
     
+    // MARK: - Init
     init(user: User, messages : [Message]) {
         self.user = user
         self.messages = messages
     }
     
-    @State var message: String = ""
     
+    // MARK: - UI Description
     var body : some View {
         
         VStack(spacing: 0) {           
@@ -28,7 +33,7 @@ struct Chat : View {
                         ForEach(messages) { message in
                             MessageView(
                                 message: message.text,
-                                time: message.timestamp,
+                                time: message.getTimeStampString(),
                                 isRead: true,
                                 isUser: message.isUser,
                                 messageBgColor: message.isUser ? Color.green : Color(hex: "#363636")
@@ -75,9 +80,7 @@ struct Chat : View {
                     TextField("Message", text: $message, axis: .vertical)
                         
                         .font(.system(size: 15))
-                        .onChange(of: message, { _, newValue in
-                            print("Here's the new value: \(newValue)")
-                        })
+                        
                         
 
                     // Attachment button
@@ -101,12 +104,35 @@ struct Chat : View {
                 // Send / mic button
                 Button {
                     // send action
+                    guard !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+
+
+                    Task {
+                        let body: [String: Any] = [
+                            "user_id": 0,
+                            "text": message,
+                            "is_user": true
+                        ]
+                        
+                        message = ""
+
+                        let request = Request(url: URL(string: basePath + "/messages")!, httpMethod: .POST, body: body)
+
+                        if let m: Message = await network.perform(request) {
+                            print("Message returned from server : ", m.timestamp)
+                            
+                            messages.append(m)
+                        } else {
+                            print("There is somee error.")
+                        }
+                        
+                        
+                        
+                        
+                    }
                     
-                    let newMessage = Message(isUser: true, senderId: UUID(), text: message, timestamp: "33:44")
-                    messages.append(newMessage)
-                    message.removeAll()
                     
-                    
+
                 } label: {
                     Image(systemName: message.isEmpty ? "mic.fill" : "arrow.up")
                         .font(.system(size: 18, weight: .semibold))
@@ -162,18 +188,18 @@ struct Chat : View {
     
 }
 
-#Preview {
-    Chat(user: User(id: 1, name: "Narendra Modi", desc: "Online"), messages: [
-        Message(
-            isUser: true,
-            senderId: UUID(),
-            text: "Modi ji, petrol ₹120 cross ho gaya 😭 Yeh war chal raha hai ya wallet attack?",
-            timestamp: "22:10"
-        ),
-        Message(
-            isUser: false,
-            senderId: UUID(),
-            text: "Mitron, situation thodi 'worrisome' ",
-            timestamp: "22:11"
-        )])
-}
+//#Preview {
+//    Chat(user: User(id: 1, name: "Narendra Modi", desc: "Online"), messages: [
+//        Message(
+//            isUser: true,
+//            senderId: UUID(),
+//            text: "Modi ji, petrol ₹120 cross ho gaya 😭 Yeh war chal raha hai ya wallet attack?",
+//            timestamp: "22:10"
+//        ),
+//        Message(
+//            isUser: false,
+//            senderId: UUID(),
+//            text: "Mitron, situation thodi 'worrisome' ",
+//            timestamp: "22:11"
+//        )])
+//}

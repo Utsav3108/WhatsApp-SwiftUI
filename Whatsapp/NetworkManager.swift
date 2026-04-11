@@ -13,7 +13,7 @@ import SwiftyJSON
 - Request Cancellation
 */
 
-let basePath = "https://www.weatherapi.com/docs"
+let basePath = "http://localhost:8000"
 
 // MARK: - Errors
 enum NetworkError: Error, LocalizedError {
@@ -87,7 +87,23 @@ struct Network {
     
     init(urlConfig: URLSessionConfiguration = .default) {
         self.urlSession = URLSession(configuration: urlConfig)
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let string = try container.decode(String.self)
+            
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            
+            if let date = formatter.date(from: string + "Z") {
+                return date
+            }
+            
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Invalid date format"
+            )
+            
+        }
     }
     
     func perform<T:Decodable>(_ request : Request) async -> T? {
@@ -123,7 +139,7 @@ struct Network {
             
             response = apiResponse.0
             
-            result = try? decoder.decode(T.self, from: response!)
+            result = try decoder.decode(T.self, from: response!)
 
             
         } catch let error as CancellationError {
