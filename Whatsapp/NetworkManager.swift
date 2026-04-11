@@ -14,6 +14,7 @@ import SwiftyJSON
 */
 
 let basePath = "http://localhost:8000"
+let websocketPath = "ws://localhost:8000/ws/1?token=secret"
 
 // MARK: - Errors
 enum NetworkError: Error, LocalizedError {
@@ -56,7 +57,7 @@ struct Request {
 }
 
 // MARK: - Network Engine
-struct Network {
+class Network {
     
     
     private struct Transaction {
@@ -83,6 +84,8 @@ struct Network {
     
     let urlSession : URLSession
     
+    var websocketTask : URLSessionWebSocketTask!
+    
     let decoder = JSONDecoder()
     
     init(urlConfig: URLSessionConfiguration = .default) {
@@ -104,6 +107,8 @@ struct Network {
             )
             
         }
+        
+        //prepareSocket()
     }
     
     func perform<T:Decodable>(_ request : Request) async -> T? {
@@ -201,7 +206,76 @@ struct Network {
     }
     
 
+    func prepareSocket() {
+        
+        let url = URL(string: websocketPath)
+        websocketTask = URLSession.shared.webSocketTask(with: url!)
+        websocketTask.resume()
+    }
     
+    func send(payload: Data) {
+        
+        print("Payload: ", String(data: payload, encoding: .utf8) ?? "")
+        
+        let message = URLSessionWebSocketTask.Message.string(String(data: payload, encoding: .utf8) ?? "")
+        websocketTask.send(message) { error in
+            print("Error sending message: \(error?.localizedDescription ?? "-")")
+        }
+    }
+  
+    func listen(completion: @escaping (Result<Message, Error>) -> Void) {
+        
+        print("Listening...")
+        
+        websocketTask.receive { [self] result in
+            
+            print("Listened something")
+            
+            switch result {
+            case .success(let message):
+                switch message {
+                case .string(let response):
+                    
+                    
+                    
+                    Task { @MainActor in
+                        // 1. Decode the response as a simple String first
+                        
+                        let data = response.data(using: .utf8)!
+                        print("Response: ", JSON(data), " - ", response)
+                        
+                        do {
+                            let outerString = try decoder.decode(String.self, from: data)
+                            
+                            // 2. Convert that nested string into Data
+                            if let innerData = outerString.data(using: .utf8) {
+                                // 3. Now decode your actual Message model
+                                let message = try decoder.decode(Message.self, from: innerData)
+                                print("Success! Message: \(message.text)")
+                                completion(.success(message))
+                            } else {
+                                print("failed to parse ; ", outerString)
+                            }
+                            
+                        } catch {
+                            print("Decoding failed: \(error)")
+                        }
+                        // Continue listening after handling this message
+                        self.listen(completion: completion)
+                    }
+                    
+                    
+                default:
+                    break
+                }
+                
+            case .failure(let error):
+                print("Lister Error : ", error.localizedDescription)
+            }
+            
+        }
+    }
+         
 }
 
 extension URLRequest {

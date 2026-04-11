@@ -15,24 +15,36 @@ struct Message: Identifiable, Hashable, Codable {
     var id: Int
     var isUser : Bool = false
     var senderId: Int
+    var receiverId: Int
     var text: String
     var timestamp: Date
     
     enum CodingKeys: String, CodingKey {
         case id
         case isUser = "is_user"
-        case senderId = "user_id"
+        case senderId = "sender_id"
+        case receiverId = "receiver_id"
         case text
         case timestamp
+    }
+    
+    init(id: Int, isUser: Bool, senderId: Int, receiverId: Int, text: String, timestamp: Date) {
+        self.id = id
+        self.isUser = isUser
+        self.senderId = senderId
+        self.receiverId = receiverId
+        self.text = text
+        self.timestamp = timestamp
     }
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
-        self.isUser = try container.decode(Bool.self, forKey: .isUser)
+        self.isUser = try container.decodeIfPresent(Bool.self, forKey: .isUser) ?? false
         self.senderId = try container.decode(Int.self, forKey: .senderId)
+        self.receiverId = try container.decode(Int.self, forKey: .receiverId)
         self.text = try container.decode(String.self, forKey: .text)
-        self.timestamp = try container.decode(Date.self, forKey: .timestamp)
+        self.timestamp = try container.decodeIfPresent(Date.self, forKey: .timestamp) ?? Date()
     }
     
     func getTimeStampString() -> String {

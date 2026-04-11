@@ -44,11 +44,25 @@ struct Chat : View {
                 }
                 .scrollDismissesKeyboard(.immediately)
                 .onAppear {
-                                // Scroll to bottom on open
-                                if let last = messages.last {
-                                    proxy.scrollTo(last.id, anchor: .bottom)
-                                }
-                            }
+                    // Scroll to bottom on open
+                    if let last = messages.last {
+                        proxy.scrollTo(last.id, anchor: .bottom)
+                    }
+                    
+
+                    network.prepareSocket()
+                    
+                    network.listen { result in
+                        switch result {
+                        case .success(let receiverMessage):
+                            self.messages.append(receiverMessage)
+                        case .failure(let failure):
+                            print("Listen Failure : ", failure.localizedDescription)
+                        }
+                    }
+                    
+                    
+                }
                 .onChange(of: messages.count) { _, _ in
                     // Scroll to bottom when new message arrives
                     if let last = messages.last {
@@ -105,34 +119,43 @@ struct Chat : View {
                 Button {
                     // send action
                     guard !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-
-
-                    Task {
-                        let body: [String: Any] = [
-                            "user_id": 0,
-                            "text": message,
-                            "is_user": true
-                        ]
-                        
-                        message = ""
-
-                        let request = Request(url: URL(string: basePath + "/messages")!, httpMethod: .POST, body: body)
-
-                        if let m: Message = await network.perform(request) {
-                            print("Message returned from server : ", m.timestamp)
-                            
-                            messages.append(m)
-                        } else {
-                            print("There is somee error.")
-                        }
-                        
-                        
-                        
-                        
-                    }
                     
                     
+                    
+                    let body: [String: Any] = [
+                        "sender_id": 1,
+                        "receiver_id": 2,
+                        "text": message,
+                        "is_user": true
+                    ]
+                    
+                    
+                    
+                    //let request = Request(url: URL(string: basePath + "/messages")!, httpMethod: .POST, body: body)
+                    
+                    //                        if let m: Message = await network.perform(request) {
+                    //                            print("Message returned from server : ", m.timestamp)
+                    //
+                    //                            messages.append(m)
+                    //                        } else {
+                    //                            print("There is somee error.")
+                    //                        }
+                    
+                    let payload = try? JSONSerialization.data(withJSONObject: body, options: [])
+                    
+                    network.send(payload: payload!)
+                    
+                    self.messages.append(Message(id: self.messages.count, isUser: true, senderId: 1, receiverId: 2, text: message, timestamp: Date()))
+                    
+                    message = ""
+                    
 
+                    
+                    
+                    
+                    
+                    
+                    
                 } label: {
                     Image(systemName: message.isEmpty ? "mic.fill" : "arrow.up")
                         .font(.system(size: 18, weight: .semibold))

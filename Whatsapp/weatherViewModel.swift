@@ -16,12 +16,5 @@ class WeatherViewModel {
     }
     
     
-    func fetchWeather(){
-        
-        guard let url = URL(string: "\(basePath)/current.json") else { return }
-        
-        let request = Request(url: url, httpMethod: .GET, body: nil)
-        
-        //apiClient.perform(request)
-    }
+
 }
