@@ -123,24 +123,12 @@ struct Chat : View {
                     
                     
                     let body: [String: Any] = [
-                        "sender_id": 1,
-                        "receiver_id": 2,
+                        "sender_id": senderId,
+                        "receiver_id": receiverId,
                         "text": message,
                         "is_user": true
                     ]
-                    
-                    
-                    
-                    //let request = Request(url: URL(string: basePath + "/messages")!, httpMethod: .POST, body: body)
-                    
-                    //                        if let m: Message = await network.perform(request) {
-                    //                            print("Message returned from server : ", m.timestamp)
-                    //
-                    //                            messages.append(m)
-                    //                        } else {
-                    //                            print("There is somee error.")
-                    //                        }
-                    
+                                        
                     let payload = try? JSONSerialization.data(withJSONObject: body, options: [])
                     
                     network.send(payload: payload!)
@@ -148,12 +136,6 @@ struct Chat : View {
                     self.messages.append(Message(id: self.messages.count, isUser: true, senderId: 1, receiverId: 2, text: message, timestamp: Date()))
                     
                     message = ""
-                    
-
-                    
-                    
-                    
-                    
                     
                     
                 } label: {

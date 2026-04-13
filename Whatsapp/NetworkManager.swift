@@ -14,7 +14,10 @@ import SwiftyJSON
 */
 
 let basePath = "http://localhost:8000"
-let websocketPath = "ws://localhost:8000/ws/1?token=secret"
+
+let senderId : String = "2"
+let receiverId : String = "1"
+let websocketPath = "ws://localhost:8000/ws/\(senderId)?token=secret"
 
 // MARK: - Errors
 enum NetworkError: Error, LocalizedError {
