@@ -3,12 +3,27 @@
 
 import SwiftUI
 
-struct User : Identifiable, Hashable {
+struct User : Identifiable, Hashable, Codable {
     var id: Int
     
     var name : String
     var desc : String
-    var image : ImageResource = .narendraModi
+    var imageURL : String? = nil
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case desc
+        case imageURL = "image_url"
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.desc = try container.decode(String.self, forKey: .desc)
+        self.imageURL = try? container.decode(String?.self, forKey: .imageURL)
+    }
 }
 
 struct Message: Identifiable, Hashable, Codable {
@@ -62,15 +77,9 @@ struct ChatList: View {
     let conversations: [Int: [Message]] = [:]
 
     // 🔥 Users with IDs aligned to conversations
-    var users: [User] = [
-        User(id: 0, name: "Narendra Modi", desc: "Runs on chai, speeches, and 56-inch confidence."),
-        User(id: 1, name: "Joe Biden", desc: "Ice cream enthusiast navigating global politics.", image: .joeBiden),
-        User(id: 2, name: "Emmanuel Macron", desc: "Balancing baguettes, diplomacy, and bold reforms.", image: .emmanuelMacron),
-        User(id: 3, name: "Rishi Sunak", desc: "Crunching budgets faster than a fintech startup.", image: .rishiSunak),
-        User(id: 4, name: "Justin Trudeau", desc: "Politics with a side of socks and selfies.", image: .justinTrudeo),
-        User(id: 5, name: "Giorgia Meloni", desc: "Steering Italy with espresso-level intensity.", image: .giorgiaMeloni),
-        User(id: 6, name: "Anthony Albanese", desc: "G’day diplomacy with a practical Aussie twist.", image: .anothonyAlbanese)
-    ]
+    @State var users: [User] = []
+    
+    var network : Network = Network()
     
     var body: some View {
         NavigationStack {
@@ -111,11 +120,20 @@ struct ChatList: View {
                                 ChatBox(
                                     userName: user.name,
                                     userDesc: user.desc,
-                                    imageName: user.image,
+                                    imageURL: URL(string: user.imageURL ?? "")!,
                                     chatType: .message
                                 )
                                 .padding(.horizontal, 20)
                             }
+                        }
+                    }
+                }
+                .onAppear() {
+                    Task {
+                        let users : [User]? = await network.perform(Request(url: URL(string: basePath + "/presidents")!, httpMethod: .GET))
+                        
+                        if let users = users {
+                            self.users = users
                         }
                     }
                 }

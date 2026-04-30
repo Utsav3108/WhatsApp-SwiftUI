@@ -124,7 +124,7 @@ struct Chat : View {
                     
                     let body: [String: Any] = [
                         "sender_id": senderId,
-                        "receiver_id": receiverId,
+                        "receiver_id": String(user.id),
                         "text": message,
                         "is_user": true
                     ]
@@ -164,7 +164,7 @@ struct Chat : View {
             // Center: Profile Image + Name
             ToolbarItem(placement: .principal) {
                 
-                ChatBox(userName: user.name, userDesc: "Online", imageName: user.image, chatType: .status)
+                ChatBox(userName: user.name, userDesc: "Online", imageURL: URL(string: user.imageURL ?? "")!, chatType: .status)
                 
             }
             

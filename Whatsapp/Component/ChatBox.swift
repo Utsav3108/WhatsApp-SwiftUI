@@ -17,17 +17,36 @@ struct ChatBox: View {
     
     let userName: String
     let userDesc: String
-    let imageName : ImageResource
+    let imageURL : URL
     let chatType: chatType
     
     
     var body: some View {
         HStack {
-            Image(imageName)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
+            AsyncImage(url: imageURL) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                    
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                        
+                case .failure:
+                    Image(systemName: "photo")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                        
+                @unknown default:
+                    EmptyView()
+                }
+            }
+            
             
             VStack(alignment: .leading) {
                 Text(userName)
@@ -57,6 +76,6 @@ struct ChatBox: View {
     }
 }
 
-#Preview {
-    ChatBox(userName: "Jane Doe", userDesc: "Sunny with a chance of code", imageName: .narendraModi, chatType: .message)
-}
+//#Preview {
+//    ChatBox(userName: "Jane Doe", userDesc: "Sunny with a chance of code", imageName: .narendraModi, chatType: .message)
+//}
