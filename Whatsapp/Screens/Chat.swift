@@ -49,7 +49,21 @@ struct Chat : View {
                         proxy.scrollTo(last.id, anchor: .bottom)
                     }
                     
+                    
+                    // http://localhost:8000/messages?sender_id=-1&receiver_id=2&limit=50&offset=0'
+                    let url = URL(string: basePath + "/messages?sender_id=\(personId)&receiver_id=\(user.id)&limit=50&offset=0")!
 
+                    
+                    let request = Request(url: url, httpMethod: .GET)
+                    
+                    Task {
+                        
+                        messages = await network.perform(request) ?? []
+                        
+                        
+                    }
+                    
+                    
                     network.prepareSocket()
                     
                     network.listen { result in
@@ -123,7 +137,7 @@ struct Chat : View {
                     
                     
                     let body: [String: Any] = [
-                        "sender_id": senderId,
+                        "sender_id": personId,
                         "receiver_id": String(user.id),
                         "text": message,
                         "is_user": true

@@ -55,8 +55,11 @@ struct Message: Identifiable, Hashable, Codable {
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
-        self.isUser = try container.decodeIfPresent(Bool.self, forKey: .isUser) ?? false
+        
         self.senderId = try container.decode(Int.self, forKey: .senderId)
+        
+        self.isUser = self.senderId == Int(personId)
+        
         self.receiverId = try container.decode(Int.self, forKey: .receiverId)
         self.text = try container.decode(String.self, forKey: .text)
         self.timestamp = try container.decodeIfPresent(Date.self, forKey: .timestamp) ?? Date()
